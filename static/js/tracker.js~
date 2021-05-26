@@ -1,0 +1,5 @@
+
+function change()
+{
+document.getElementById("status").className= 'show'
+}

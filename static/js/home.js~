@@ -1,0 +1,4 @@
+function successmsg()
+{
+document.getElementById('self').className='self';
+}

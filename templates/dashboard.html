@@ -1,0 +1,41 @@
+{% extends 'base_1.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block stylesheet %}
+    <link rel='stylesheet' href='../static/css/dashboard.css'>
+
+ {% endblock stylesheet %}
+{% block body %}
+
+<div class="container">
+   
+    <div   id='status' >
+        {% if not active and not inactive%}
+        <h2> no Orders placed. </h2>
+     {%else%}
+        <div class="my-4">
+         <h1> Current Orders </h1>
+{% if active %}
+    {% for x in active%}
+   <pre>Order ID: {{x.order_id}}         Order Name: {{x.order_name}}</pre>
+   <p id='link'><a href="trackorder" >Track order </a></p>
+   {% endfor %}
+{%else %}
+<h2> No Current Orders </h2>
+{% endif %}
+
+<h1> Previous Orders </h1>
+{% if inactive %}
+    {% for x in inactive%}
+  <pre id='prev'>Order ID: {{x.order_id}}         Order Name: {{x.order_name}}</pre>
+   {% endfor %}
+{%else %}
+<h2> No Previous Orders </h2>
+{% endif %}
+{% endif %}
+
+           
+        </div>
+    </div>
+    
+</div>
+{% endblock body%}  
