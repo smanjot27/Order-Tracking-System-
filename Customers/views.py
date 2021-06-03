@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect
-from Customers.models import  Contact, Userinfo,Order, OrderUpdt
+from Customers.models import  Contact, Userinfo,Order, OrderUpdt,Process
 from django.db import IntegrityError
 import datetime
 from django.contrib.auth.models import User
@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout,authenticate,login
 
-RCount=1000
+
 recent=0
 
 
@@ -38,12 +38,11 @@ def loginuser(request):
             login(request,user)
             return redirect('login/')
         else:
-            messages.error(request,'This is not a vaid email and password or your account is inactive')
+            messages.error(request,'This is not a valid email and password or your account is inactive')
             return redirect('/login')
     return render(request, 'login.html')
 
 def register(request):
-    global RCount
     if request.method =='POST':
         #get parameters
         name=request.POST.get('name')
@@ -63,8 +62,7 @@ def register(request):
         if len(gst)!=15 or not gst.isalnum():
             messages.error(request,'Enter valid GST number')
             return redirect('/register')
-        RCount+=1
-        rege=Userinfo( UserID=RCount, name=name, name_of_organization = org_name, organization_address =address, contact=contact, email=email, gst_no=gst, password=pswd, date=datetime.datetime.today(),status='inactive') 
+        rege=Userinfo( name=name, name_of_organization = org_name, organization_address =address, contact=contact, email=email, gst_no=gst, password=pswd, date=datetime.datetime.today(),status='inactive') 
         try:
             myuser=User.objects.create_user(email,email,pswd)
             myuser.is_active=False
@@ -111,7 +109,7 @@ def profile(request):
         'contact':obj.contact,
         'email':obj.email,
         'gst':obj.gst_no,
-        'pswd':obj.password         
+      
     }
     return render(request, 'profile.html',user)
 
@@ -134,7 +132,7 @@ def Product_desc(request,pid):
             design=request.POST.get('design')
             typeop = request.POST.get('type')
         else:
-        	design="False"
+        	design="No"
         	typeop="None"
         
         ordd=Order(order_name=name, material=material, dem=dem, size=size, quantity=qty, specification=speci,design=design, type_of_print=typeop, tapping=tape, Cust=guest, cust_name=guest.name_of_organization,date=datetime.datetime.today())
@@ -142,6 +140,8 @@ def Product_desc(request,pid):
         recent=ordd.order_id
         update=OrderUpdt(order_id=ordd.order_id,updtDesc='Your order has been placed successfully.', date=datetime.datetime.today())
         update.save()
+        process=Process(order_id=ordd.order_id, raw_material=ordd.material, design=ordd.design, printing=ordd.type_of_print,date=datetime.datetime.today())
+        process.save()
         return redirect('/summary')
     temp='product'+str(pid)+'.html'
     return render(request,temp)
@@ -157,7 +157,7 @@ def tracker(request):
         key=request.POST.get('orderid')
         guest=Userinfo.objects.get(email=request.user)
         try:
-            orders=Order.objects.get(order_id=key)
+            orders=Order.objects.get(order_id=key , Cust=guest)
 
             if orders:
                 updts=OrderUpdt.objects.filter(order_id=key)

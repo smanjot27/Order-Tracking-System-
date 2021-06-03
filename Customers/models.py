@@ -14,7 +14,7 @@ class Contact(models.Model):
      return self.organisation
 #register table
 class Userinfo(models.Model):
-    UserID=models.IntegerField(primary_key=True)
+    UserID=models.AutoField(primary_key=True)
     name=models.CharField(max_length=170)
     name_of_organization=models.CharField(max_length=170)
     organization_address=models.CharField(max_length=170)
@@ -24,8 +24,6 @@ class Userinfo(models.Model):
     password=models.CharField(max_length=16)
     date=models.DateField()
     status=models.CharField(max_length=122)
-    def __str__(self):
-        return self.name
 
 
 class Order(models.Model):
@@ -48,6 +46,15 @@ class OrderUpdt(models.Model):
     updtId=models.AutoField(primary_key=True)
     order_id=models.IntegerField()
     updtDesc=models.CharField(max_length=5000)
+    date=models.DateField()
+
+class Process(models.Model):
+    processid=models.AutoField(primary_key=True)
+    order_id= models.IntegerField()
+    raw_material=models.CharField(max_length=122)
+    design=models.CharField(max_length=122)
+    printing=models.CharField(max_length=122)
+    cylsize=models.IntegerField(blank= True , null=True )
     date=models.DateField()
 
 

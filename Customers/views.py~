@@ -89,10 +89,31 @@ def logoutuser(request):
 	return redirect('/')
 	
 def dashboard(request):
+    guest=Userinfo.objects.get(email=request.user)
+    ordd=Order.objects.filter(Cust=guest)
+    active=[]
+    inactive=[]
+    for i in ordd:
+        if i.status=='ongoing':
+            active.append(i)
+        else:
+            inactive.append(i)
+    context={'active':active,'inactive':inactive}
+    return render(request, 'dashboard.html',context)
     return render(request, 'dashboard.html')
 
 def profile(request):
-    return render(request, 'profile.html')
+    obj=Userinfo.objects.get(email=request.user.username)
+    user={
+        'name':obj.name,
+        'organization':obj.name_of_organization,
+        'address':obj.organization_address,
+        'contact':obj.contact,
+        'email':obj.email,
+        'gst':obj.gst_no,
+        'pswd':obj.password         
+    }
+    return render(request, 'profile.html',user)
 
 def LoggedProducts(request):
     return render(request, 'LoggedProducts.html')
@@ -113,7 +134,7 @@ def Product_desc(request,pid):
             design=request.POST.get('design')
             typeop = request.POST.get('type')
         else:
-        	design="False"
+        	design="No"
         	typeop="None"
         
         ordd=Order(order_name=name, material=material, dem=dem, size=size, quantity=qty, specification=speci,design=design, type_of_print=typeop, tapping=tape, Cust=guest, cust_name=guest.name_of_organization,date=datetime.datetime.today())

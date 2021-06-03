@@ -28,8 +28,40 @@ td
 {
 padding:2%;
 }
-a
+#track
 {
     margin-left: 46%;
     font-size: 123%;
+}
+@media only print
+{
+
+#track, footer
+{
+display:none;
+}
+table
+{
+width:50%;
+font-size:90%;
+box-shadow:none;
+background:none;
+margin-left:5%;
+}
+h1
+{
+color:#000;
+text-align:left;
+}
+h3
+{
+margin-left:5%;
+}
+p
+{display:none;
+}
+td
+{
+padding-left:10%;
+}
 }

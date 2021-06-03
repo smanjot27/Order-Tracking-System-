@@ -10,24 +10,40 @@
    
     <div   id='status' >
         {% if not active and not inactive%}
-        <h2> no Orders placed. </h2>
+        <h2 class='spl'> No Orders placed. </h2>
      {%else%}
         <div class="my-4">
          <h1> Current Orders </h1>
 {% if active %}
+<table>
+            <tr><th>Order ID</th>
+					<th>Order Name</th>
+					<th>Status</th></tr>
     {% for x in active%}
-   <pre>Order ID: {{x.order_id}}         Order Name: {{x.order_name}}</pre>
-   <p id='link'><a href="trackorder" >Track order </a></p>
-   {% endfor %}
+				<tr>
+					<td>{{x.order_id}}</td>
+					<td>{{x.order_name}}</td>
+					<td><a href='trackorder'>Track status</a></td>
+				</tr>
+				{% endfor %}
+				</table>
 {%else %}
 <h2> No Current Orders </h2>
 {% endif %}
 
 <h1> Previous Orders </h1>
 {% if inactive %}
+   <table>
+            <tr><th>Order ID</th>
+					<th>Order Name</th>
+				</tr>
     {% for x in inactive%}
-  <pre id='prev'>Order ID: {{x.order_id}}         Order Name: {{x.order_name}}</pre>
-   {% endfor %}
+				<tr>
+					<td>{{x.order_id}}</td>
+					<td>{{x.order_name}}</td>
+				</tr>
+				{% endfor %}
+				</table>
 {%else %}
 <h2> No Previous Orders </h2>
 {% endif %}
